@@ -1,0 +1,21 @@
+
+set theOutputFolder to choose folder with prompt "Please select an output folder:"
+
+set theOutputFolder to (the POSIX path of theOutputFolder)
+
+set local_ip to do shell script "ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'"
+
+
+tell application "Terminal"
+	set currentTab to do script "clear -x"
+	
+	do script ("echo -e   Web server: http://" & local_ip & "
+	") in currentTab
+	
+	do script ("cd " & theOutputFolder) in currentTab
+	do script ("python3 -m http.server --cgi 80") in currentTab
+end tell
+
+open location "http://" & local_ip
+
+
